@@ -20,7 +20,7 @@ export interface ProjectUser {
     occurrence: number;
     final_mark: number | null;
     status: 'finished' | 'in_progress' | 'waiting_for_correction' | 'searching_a_group' | 'creating_group' | 'parent';
-    validated?: boolean | null;
+    'validated?': boolean | null;
     current_team_id: number | null;
     project: {
         id: number;

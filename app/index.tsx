@@ -25,7 +25,10 @@ export default function HomeScreen() {
         try {
             await getUser(searchLogin.trim(), token);
             // Si on arrive ici, le login existe → on navigue
-            router.push(`/profile/${searchLogin.trim()}`);
+            router.push({
+                pathname: '/profile/[login]',
+                params: { login: searchLogin.trim() }
+            });
         } catch (error) {
             if (error instanceof Error) {
             if (error.message === 'NOT_FOUND')

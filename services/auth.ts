@@ -65,16 +65,39 @@ async function exchangeCodeForToken(code: string, codeVerifier: string) {
     return response.json();
 }
 
+async function setItem(key: string, value: string) {
+  if (Platform.OS === 'web') {
+    localStorage.setItem(key, value);
+  } else {
+    await SecureStore.setItemAsync(key, value);
+  }
+}
+
+async function getItem(key: string): Promise<string | null> {
+  if (Platform.OS === 'web') {
+    return localStorage.getItem(key);
+  }
+  return SecureStore.getItemAsync(key);
+}
+
+async function deleteItem(key: string) {
+  if (Platform.OS === 'web') {
+    localStorage.removeItem(key);
+  } else {
+    await SecureStore.deleteItemAsync(key);
+  }
+}
+
 export async function saveToken(accessToken: string, refreshToken: string, expiresIn: number) {
     const expiry = Date.now() + expiresIn * 1000;
-    await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
-    await SecureStore.setItemAsync(REFRESH_KEY, refreshToken);
-    await SecureStore.setItemAsync(EXPIRY_KEY, expiry.toString());
+    await setItem(TOKEN_KEY, accessToken);
+    await setItem(REFRESH_KEY, refreshToken);
+    await setItem(EXPIRY_KEY, expiry.toString());
 }
 
 export async function getStoredToken(): Promise<string | null> {
-    const token = await SecureStore.getItemAsync(TOKEN_KEY);
-    const expiry = await SecureStore.getItemAsync(EXPIRY_KEY);
+    const token = await getItem(TOKEN_KEY);
+    const expiry = await getItem(EXPIRY_KEY);
     if (!token || !expiry) return null;
     // Token expiré ?
     if (Date.now() > parseInt(expiry)) return null;
@@ -82,9 +105,9 @@ export async function getStoredToken(): Promise<string | null> {
 }
 
 export async function clearTokens() {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
-    await SecureStore.deleteItemAsync(REFRESH_KEY);
-    await SecureStore.deleteItemAsync(EXPIRY_KEY);
+    await deleteItem(TOKEN_KEY);
+    await deleteItem(REFRESH_KEY);
+    await deleteItem(EXPIRY_KEY);
 }
 
 export async function login(): Promise<boolean> {
