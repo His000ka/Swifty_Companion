@@ -1,12 +1,14 @@
-import Constants from 'expo-constants'; 
+import Constants from 'expo-constants';
 import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 import * as WebBrowser from 'expo-web-browser';
-import * as Linking from 'expo-linking';
-
+import { Platform } from 'react-native';
+// import * as Linking from 'expo-linking';  ?
 
 const CLIENT_ID = process.env.EXPO_PUBLIC_42_CLIENT_ID!;
-const REDIRECT_URI = process.env.EXPO_PUBLIC_42_REDIRECT_URI!;
+const REDIRECT_URI = Platform.OS === 'web'
+  ? 'http://localhost:8081'
+  : process.env.EXPO_PUBLIC_42_REDIRECT_URI!;
 const CLIENT_SECRET = Constants.expoConfig?.extra?.ftClientSecret;
 const TOKEN_KEY = 'ft_access_token';
 const REFRESH_KEY = 'ft_refresh_token';
@@ -88,7 +90,7 @@ export async function clearTokens() {
 export async function login(): Promise<boolean> {
   const codeVerifier = await generateCodeVerifier();
   const codeChallenge = await generateCodeChallenge(codeVerifier);
-  const state = await generateCodeVerifier(); // réutilise la même logique pour générer un state random
+  const state = await generateCodeVerifier(); // state random
 
   const authUrl = buildAuthUrl(codeChallenge, state);
 
