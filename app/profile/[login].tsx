@@ -117,12 +117,10 @@ export default function ProfileScreen() {
         );
     }
 
-    // On prend le cursus 42 (id 21), pas la Piscine
     const cursus42 = profile.cursus_users.find(c => c.cursus_id === 21);
     const level = cursus42?.level ?? 0;
     const skills = cursus42?.skills ?? [];
 
-    // Projets filtrés : seulement ceux qui sont "finished"
     const projects = profile.projects_users
     .filter(p => p.status === 'finished')
     .sort((a, b) => (b.final_mark ?? 0) - (a.final_mark ?? 0));

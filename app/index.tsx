@@ -24,7 +24,6 @@ export default function HomeScreen() {
         
         try {
             await getUser(searchLogin.trim(), token);
-            // Si on arrive ici, le login existe → on navigue
             router.push({
                 pathname: '/profile/[login]',
                 params: { login: searchLogin.trim() }
@@ -75,7 +74,7 @@ return (
         value={searchLogin}
         onChangeText={(text) => {
             setSearchLogin(text);
-            setSearchError(null); // reset l'erreur quand on retape
+            setSearchError(null);
         }}
         autoCapitalize="none"
         autoCorrect={false}
